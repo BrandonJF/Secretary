@@ -13,8 +13,9 @@ import java.util.List;
  * Created by brandon on 1/18/16.
  */
 public class TextService {
-    private final Uri inboxURI = Telephony.Sms.Inbox.CONTENT_URI;
-    String[] reqCols = {Telephony.Sms._ID, Telephony.Sms.ADDRESS, Telephony.Sms.BODY, Telephony.Sms.READ};
+    private final Uri messageUri = Telephony.Sms.Conversations.CONTENT_URI;
+    com.android.pro
+    String[] reqCols = {Telephony.Sms.Conversations._ID, Telephony.Sms.Conversations.ADDRESS, Telephony.Sms.Conversations.SNIPPET, Telephony.Sms.READ};
     private static TextService mInstance;
 
    public TextService() {
@@ -31,7 +32,7 @@ public class TextService {
     public List<String> getMessages(Context context){
         List<String> messages = new ArrayList<String>();
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(inboxURI,
+        Cursor cursor = contentResolver.query(messageUri,
                 reqCols,
                 null,
                 null,
