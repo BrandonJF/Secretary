@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getMessages(){
-        List<String> messages = TextService.getInstance().getMessages(getApplicationContext());
-        Log.d(this.getLocalClassName(), messages.toString());
+        List<Conversation> conversationList = TextService.getInstance().getConversations(getApplicationContext());
+        Log.d(this.getLocalClassName(), conversationList.toString());
 
     }
 }

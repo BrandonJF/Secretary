@@ -13,43 +13,48 @@ import java.util.List;
  * Created by brandon on 1/18/16.
  */
 public class TextService {
-    private final Uri inboxURI = Telephony.Sms.Inbox.CONTENT_URI;
-    String[] reqCols = {Telephony.Sms._ID, Telephony.Sms.ADDRESS, Telephony.Sms.BODY, Telephony.Sms.READ};
+    private final Uri inboxURI = Telephony.Sms.Conversations.CONTENT_URI;
+    String[] reqCols = {Telephony.Sms.ADDRESS, Telephony.Sms.Conversations.SNIPPET, Telephony.Sms.READ};
     private static TextService mInstance;
 
-   public TextService() {
+    public TextService() {
 
     }
 
-    public static TextService getInstance(){
-        if (mInstance == null){
+    public static TextService getInstance() {
+        if (mInstance == null) {
             mInstance = new TextService();
         }
         return mInstance;
     }
 
-    public List<String> getMessages(Context context){
-        List<String> messages = new ArrayList<String>();
+    public List<Conversation> getConversations(Context context) {
+        List<Conversation> conversations = new ArrayList<Conversation>();
         ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(inboxURI,
                 reqCols,
                 null,
                 null,
                 Telephony.Sms.Inbox.DEFAULT_SORT_ORDER);
-        int totalMessages = cursor.getCount();
+        int totalConversations = cursor.getCount();
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             //got to the first message if it exists
-            for(int i = 0; i < 10; i++){
-                messages.add(cursor.getString(2));
+            for (int i = 0; i < 10; i++) {
+                Conversation conversation = new Conversation();
+//                conversation.setId(cursor.getString(cursor.getColumnIndexOrThrow("_ID")));
+                conversation.setAddress(cursor.getString(cursor.getColumnIndexOrThrow("ADDRESS")));
+                conversation.setRead(cursor.getString(cursor.getColumnIndexOrThrow("READ")));
+                conversation.setSnippet(cursor.getString(cursor.getColumnIndexOrThrow("SNIPPET")));
+                conversations.add(conversation);
                 cursor.moveToNext();
             }
-        } else{
+        } else {
             throw new RuntimeException("There are no messages in the inbox.");
         }
         //close the cursor stream
         cursor.close();
-        return messages;
+        return conversations;
 
     }
 
